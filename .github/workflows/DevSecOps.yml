@@ -76,9 +76,9 @@ jobs:
         uses: Azure/aci-deploy@v1
         with:
           resource-group: DemoAppRG
-          dns-name-label: MyAwesomeApp
+          dns-name-label: my-awesome-app
           image: index.docker.io/${{ vars.IMAGE_NAME }}:${{ vars.IMAGE_TAG }}
-          name: MyAwesomeApp
+          name: my-awesome-app
           location: 'North Europe'
           cpu: 1
           memory: 1.5
