@@ -77,6 +77,8 @@ jobs:
         with:
           resource-group: DemoAppRG
           dns-name-label: my-awesome-app
+          registry-username: ${{ secrets.REGISTRY_USERNAME }}
+          registry-password: ${{ secrets.REGISTRY_PASSWORD }}
           image: index.docker.io/${{ vars.IMAGE_NAME }}:${{ vars.IMAGE_TAG }}
           name: my-awesome-app
           location: 'North Europe'
