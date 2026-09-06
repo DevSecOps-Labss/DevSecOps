@@ -57,7 +57,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: set up azure container instance
+      - name: Set up azure container instance
         uses: azure/login@v3
         env:
           ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
@@ -83,3 +83,5 @@ jobs:
           cpu: 1
           memory: 1.5
           ports: 80 
+
+
