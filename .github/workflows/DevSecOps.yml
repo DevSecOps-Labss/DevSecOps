@@ -50,6 +50,12 @@ jobs:
           docker build -t ${{ vars.IMAGE_NAME }}:${{ vars.IMAGE_TAG }} .
           docker push ${{ vars.IMAGE_NAME }}:${{ vars.IMAGE_TAG }}
 
+      - name: Docker Scout
+        id: docker-scout
+        uses: docker/scout-action@v1
+        with:
+            command: quickview,cves,recommendations 
+
 
 
   deploy_app:
