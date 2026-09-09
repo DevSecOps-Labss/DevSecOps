@@ -1,0 +1,19 @@
+name: ZAP Scan
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  Scan_with_ZAP:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Run ZAP Automation Framework Scan
+        uses: zaproxy/action-af@v0.3.0
+        with:
+          plan: '.github/workflows/zap/zap-plan.yml'

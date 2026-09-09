@@ -1,0 +1,21 @@
+env:
+  contexts:
+    - name: "CI-Context"
+      url: "http://my-awesome-app.northeurope.azurecontainer.io:5000/" # Replace with your actual container or staging URL
+      
+  parameters:
+    failOnError: true
+    failOnWarning: false
+jobs:
+  - type: passiveScan-config
+    parameters:
+      maxAlertsPerRule: 10
+  - type: spider
+    parameters:
+      context: "CI-Context"
+      maxDuration: 5 # in minutes, safe for fast CI feedback
+  - type: report
+    parameters:
+      template: "traditional-html-plus"
+      reportDir: "."
+      reportFile: "zap-report"
