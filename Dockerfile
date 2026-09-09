@@ -17,9 +17,9 @@ RUN python -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 
 COPY $srcDir/requirements.txt .
-RUN pip install --no-cache-dir --upgrade pip \
-    "setuptools>=78.1.1" \
-    "msgpack>=1.2.1" \
+RUN python -m pip install --no-cache-dir --upgrade pip \
+    && pip install --no-cache-dir setuptools==78.0.0 \
+    && pip install --no-cache-dir msgpack==1.2.2 \
     && pip install --no-cache-dir -r requirements.txt
 
 ########################
