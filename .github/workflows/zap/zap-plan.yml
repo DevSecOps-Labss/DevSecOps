@@ -1,8 +1,9 @@
 env:
   contexts:
     - name: "CI-Context"
-      url: "http://my-awesome-app.northeurope.azurecontainer.io:5000/" # Replace with your actual container or staging URL
-      
+      urls:
+        - "http://my-awesome-app.northeurope.azurecontainer.io:5000/" # Replace with your actual container or staging URL
+
   parameters:
     failOnError: true
     failOnWarning: false
@@ -17,5 +18,5 @@ jobs:
   - type: report
     parameters:
       template: "traditional-html-plus"
-      reportDir: "."
+      reportDir: "/zap/wrk"
       reportFile: "zap-report"
