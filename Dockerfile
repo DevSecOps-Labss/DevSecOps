@@ -16,16 +16,15 @@ WORKDIR /app
 RUN python -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 
-# Create a constraints file to lock minimum secure versions globally
-RUN echo "setuptools>=84.0.0" > /tmp/constraints.txt && \
-    echo "msgpack>=1.2.2" >> /tmp/constraints.txt
-
-# Tell pip to respect these constraints during ALL installs
-ENV PIP_CONSTRAINT=/tmp/constraints.txt
-
 COPY $srcDir/requirements.txt .
 RUN python -m pip install --no-cache-dir --upgrade pip \
     && pip install --no-cache-dir -r requirements.txt
+
+# 2. DELETE and PURGE the vulnerable packages entirely from the venv
+RUN pip uninstall -y setuptools msgpack
+
+# 3. Clean-download ONLY the safe, verified versions
+RUN pip install --no-cache-dir "setuptools==84.0.0" "msgpack==1.2.2"
 
 ########################
 # Stage 2: Runtime
