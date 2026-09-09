@@ -18,6 +18,8 @@ ENV PATH="/opt/venv/bin:$PATH"
 
 COPY $srcDir/requirements.txt .
 RUN pip install --no-cache-dir --upgrade pip \
+    "setuptools>=78.1.1" \
+    "msgpack>=1.2.1" \
     && pip install --no-cache-dir -r requirements.txt
 
 ########################
