@@ -16,10 +16,15 @@ WORKDIR /app
 RUN python -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 
+# Create a constraints file to lock minimum secure versions globally
+RUN echo "setuptools>=84.0.0" > /tmp/constraints.txt && \
+    echo "msgpack>=1.2.2" >> /tmp/constraints.txt
+
+# Tell pip to respect these constraints during ALL installs
+ENV PIP_CONSTRAINT=/tmp/constraints.txt
+
 COPY $srcDir/requirements.txt .
 RUN python -m pip install --no-cache-dir --upgrade pip \
-    && pip install --no-cache-dir setuptools==84.0.0 \
-    && pip install --no-cache-dir msgpack==1.2.2 \
     && pip install --no-cache-dir -r requirements.txt
 
 ########################
