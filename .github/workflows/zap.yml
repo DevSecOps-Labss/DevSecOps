@@ -17,3 +17,11 @@ jobs:
         uses: zaproxy/action-af@v0.3.0
         with:
           plan: '.github/workflows/zap/zap-plan.yml'
+
+      - name: Upload ZAP report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: zap-report
+          path: zap-report/
+          retention-days: 14
