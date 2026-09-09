@@ -13,15 +13,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
 
-      - name: Run ZAP Automation Framework Scan
-        uses: zaproxy/action-af@v0.3.0
+      - name: ZAP Scan
+        uses: zaproxy/action-baseline@v0.15.0
         with:
-          plan: '.github/workflows/zap/zap-plan.yml'
-
-      - name: Upload ZAP report
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: zap-report
-          path: zap-report/
-          retention-days: 14
+          token: ${{ secrets.GITHUB_TOKEN }}
+          target: 'http://my-awesome-app.northeurope.azurecontainer.io:5000/'
