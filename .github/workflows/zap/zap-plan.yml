@@ -2,7 +2,7 @@ env:
   contexts:
     - name: "CI-Context"
       urls:
-        - "http://my-awesome-app.northeurope.azurecontainer.io:5000/" # Replace with your actual container or staging URL
+        - "https://www.zaproxy.org" # Replace with your actual container or staging URL
 
   parameters:
     failOnError: true
