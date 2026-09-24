@@ -44,19 +44,37 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v4
 
+      - name: Extract Docker metadata
+        id: meta
+        uses: docker/metadata-action@v4.4.0
+        with:
+          images: ${{ vars.IMAGE_NAME }}:${{ vars.IMAGE_TAG }}
+          tags: |
+            type=edge,branch=$repo.default_branch
+            type=semver,pattern=v{{version}}
+            type=sha,prefix=,suffix=,format=short
 
-      - name: Build and push Docker image
-        run: |
-          docker build -t ${{ vars.IMAGE_NAME }}:${{ vars.IMAGE_TAG }} .
-          docker push ${{ vars.IMAGE_NAME }}:${{ vars.IMAGE_TAG }}
+      - name: Build and push image
+        uses: docker/build-push-action@v7.4.0
+        with:
+          sbom: true
+          provenance: mode=max
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+      
+      #- name: Build and push Docker image
+       # run: |
+        #  docker build -t ${{ vars.IMAGE_NAME }}:${{ vars.IMAGE_TAG }} .
+         # docker push ${{ vars.IMAGE_NAME }}:${{ vars.IMAGE_TAG }}
 
       - name: Docker Scout
         id: docker-scout
-        uses: docker/scout-action@v1
+        uses: docker/scout-action@v1.24.0
         with:
-            command: quickview,cves,recommendations 
-
-
+          command: quickview,cves,recommendations,sbom
+          image: ${{ vars.IMAGE_NAME }}:${{ vars.IMAGE_TAG }}
+          format: json
+          output: sbom.json
 
   deploy_app:
     runs-on: ubuntu-latest
