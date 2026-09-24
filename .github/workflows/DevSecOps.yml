@@ -72,7 +72,6 @@ jobs:
         uses: docker/scout-action@v1.24.0
         with:
           command: quickview,cves,recommendations,sbom
-          image: ${{ vars.IMAGE_NAME }}
           format: json
           output: sbom.json
 
