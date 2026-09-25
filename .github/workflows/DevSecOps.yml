@@ -55,17 +55,31 @@ jobs:
             type=sha,prefix=,suffix=,format=short
 
       - name: Build and push image
+        id: build-image
         uses: docker/build-push-action@v7.4.0
         with:
-          sbom: true
-          provenance: mode=max
+          context: .
+          #sbom: true
+          #provenance: mode=max
           push: true
           tags: ${{ steps.meta.outputs.tags }}
       
-      #- name: Build and push Docker image
-       # run: |
-        #  docker build -t ${{ vars.IMAGE_NAME }}:${{ vars.IMAGE_TAG }} .
-         # docker push ${{ vars.IMAGE_NAME }}:${{ vars.IMAGE_TAG }}
+      # Generate the SBOM file using Syft
+      - name: Generate SBOM with Syft
+        uses: anchore/sbom-action@v0.15.11
+        with:
+          image: ${{ vars.IMAGE_NAME }}:${{ steps.meta.outputs.tags }}
+          output-file: 'sbom.json'
+          format: 'cyclonedx-json'
+
+      # Sign and attach that specific SBOM file to the pushed image
+      - name: Attach SBOM Attestation to Image
+        uses: actions/attest-sbom@v4.1.0
+        with:
+          subject-name: docker.io/library/${{ vars.IMAGE_NAME }}
+          subject-digest: ${{ steps.build-image.outputs.digest }}
+          sbom-path: 'sbom.json'
+          push-to-registry: true
 
       - name: Docker Scout
         id: docker-scout
@@ -95,18 +109,18 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       
-      - name: Deploy to Azure Container Instance
-        uses: Azure/aci-deploy@v1
-        with:
-          resource-group: DemoAppRG
-          dns-name-label: my-awesome-app
-          registry-login-server: index.docker.io
-          registry-username: ${{ secrets.REGISTRY_USERNAME }}
-          registry-password: ${{ secrets.REGISTRY_PASSWORD }}
-          image: index.docker.io/${{ vars.IMAGE_NAME }}:${{ vars.IMAGE_TAG }}
-          name: my-awesome-app
-          location: 'North Europe'
-          cpu: 1
-          memory: 1.5
-          ports: 5000
+      #- name: Deploy to Azure Container Instance
+        #uses: Azure/aci-deploy@v1
+        #with:
+          #resource-group: DemoAppRG
+          #dns-name-label: my-awesome-app
+          #registry-login-server: index.docker.io
+          #registry-username: ${{ secrets.REGISTRY_USERNAME }}
+          #registry-password: ${{ secrets.REGISTRY_PASSWORD }}
+          #image: index.docker.io/${{ vars.IMAGE_NAME }}:${{ vars.IMAGE_TAG }}
+          #name: my-awesome-app
+          #location: 'North Europe'
+          #cpu: 1
+          #memory: 1.5
+          #ports: 5000
           
