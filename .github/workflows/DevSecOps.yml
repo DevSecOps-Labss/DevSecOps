@@ -84,7 +84,7 @@ jobs:
       - name: Attach SBOM Attestation to Image
         uses: actions/attest-sbom@v4.1.0
         with:
-          subject-name: docker.io/library/${{ vars.IMAGE_NAME }}
+          subject-name: index.docker.io/library/${{ vars.IMAGE_NAME }}
           subject-digest: ${{ steps.build-image.outputs.digest }}
           sbom-path: 'sbom.json'
           push-to-registry: true
