@@ -72,7 +72,13 @@ jobs:
           image: ${{ steps.build-image.outputs.image }}
           output-file: 'sbom.json'
           format: 'cyclonedx-json'
-          artifact-name: 'devsecops-sbom'
+          upload-artifact: false 
+
+      - name: Upload SBOM Artifact officially
+        uses: actions/upload-artifact@v4
+        with:
+          name: devsecops-sbom       # Clean, modern naming validation
+          path: sbom.json            # Points directly to the file created above
 
       # Sign and attach that specific SBOM file to the pushed image
       - name: Attach SBOM Attestation to Image
