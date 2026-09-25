@@ -69,7 +69,7 @@ jobs:
       - name: Generate SBOM with Syft
         uses: anchore/sbom-action@v0.15.11
         with:
-          image: docker.io/library/${{ vars.IMAGE_NAME }}:${{ steps.meta.outputs.tags }}
+          image: ${{ steps.build-image.outputs.image }}
           output-file: 'sbom.json'
           format: 'cyclonedx-json'
 
