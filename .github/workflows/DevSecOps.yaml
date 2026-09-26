@@ -54,6 +54,7 @@ jobs:
         with:
           username: ${{ secrets.REGISTRY_USERNAME }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
+          logout: false
 
       - name: Build and push image
         id: build-image
@@ -84,7 +85,7 @@ jobs:
       - name: Attach SBOM Attestation to Image
         uses: actions/attest@v4.2.0
         with:
-          subject-name: docker.io/library/${{ vars.IMAGE_NAME }}
+          subject-name: docker.io/${{ vars.IMAGE_NAME }}
           subject-digest: ${{ steps.build-image.outputs.digest }}
           sbom-path: 'sbom.json'
           push-to-registry: true
