@@ -82,7 +82,7 @@ jobs:
 
       # Sign and attach that specific SBOM file to the pushed image
       - name: Attach SBOM Attestation to Image
-        uses: actions/attest-sbom@v4.1.0
+        uses: actions/attest@v4.2.0
         with:
           subject-name: index.docker.io/library/${{ vars.IMAGE_NAME }}
           subject-digest: ${{ steps.build-image.outputs.digest }}
