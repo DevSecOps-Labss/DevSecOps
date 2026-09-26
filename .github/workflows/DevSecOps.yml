@@ -36,12 +36,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
 
-      - name: Login to Docker Registry
-        uses: docker/login-action@v4
-        with:
-          username: ${{ secrets.REGISTRY_USERNAME }}
-          password: ${{ secrets.REGISTRY_PASSWORD }}
-
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v4
 
@@ -54,6 +48,12 @@ jobs:
             type=edge,branch=$repo.default_branch
             type=semver,pattern=v{{version}}
             type=sha,prefix=,suffix=,format=short
+
+      - name: Login to Docker Registry
+        uses: docker/login-action@v4
+        with:
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
 
       - name: Build and push image
         id: build-image
@@ -77,25 +77,25 @@ jobs:
       - name: Upload SBOM Artifact officially
         uses: actions/upload-artifact@v4
         with:
-          name: devsecops-sbom       # Clean, modern naming validation
-          path: sbom.json            # Points directly to the file created above
+          name: 'devsecops-sbom'       # Clean, modern naming validation
+          path: 'sbom.json'            # Points directly to the file created above
 
       # Sign and attach that specific SBOM file to the pushed image
       - name: Attach SBOM Attestation to Image
         uses: actions/attest@v4.2.0
         with:
-          subject-name: index.docker.io/library/${{ vars.IMAGE_NAME }}
+          subject-name: docker.io/library/${{ vars.IMAGE_NAME }}
           subject-digest: ${{ steps.build-image.outputs.digest }}
           sbom-path: 'sbom.json'
           push-to-registry: true
 
-      - name: Docker Scout
-        id: docker-scout
-        uses: docker/scout-action@v1.24.0
-        with:
-          command: quickview,cves,recommendations,sbom
-          format: json
-          output: sbom.json
+      - #name: Docker Scout
+        #id: docker-scout
+        #uses: docker/scout-action@v1.24.0
+        #with:
+          #command: quickview,cves,recommendations,sbom
+          #format: json
+          #output: sbom.json
 
   deploy_app:
     runs-on: ubuntu-latest
