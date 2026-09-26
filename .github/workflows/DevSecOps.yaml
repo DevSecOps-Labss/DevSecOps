@@ -89,7 +89,7 @@ jobs:
           sbom-path: 'sbom.json'
           push-to-registry: true
 
-      - #name: Docker Scout
+      #- name: Docker Scout
         #id: docker-scout
         #uses: docker/scout-action@v1.24.0
         #with:
